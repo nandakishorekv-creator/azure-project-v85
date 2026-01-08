@@ -1,0 +1,52 @@
+{
+  "projectName": "azure-project-v85",
+  "artifactId": "azure-project-v85",
+  "version": "1.0.0",
+  "description": "MuleSoft integration: azure-project-v85",
+  "endpoints": [],
+  "connectors": [
+    "secure-properties",
+    "http",
+    "tls",
+    "salesforce"
+  ],
+  "flows": [
+    {
+      "name": "post-leads-flow",
+      "type": "flow"
+    },
+    {
+      "name": "get-lead-by-id-flow",
+      "type": "flow"
+    },
+    {
+      "name": "put-lead-by-id-flow",
+      "type": "flow"
+    },
+    {
+      "name": "delete-lead-by-id-flow",
+      "type": "flow"
+    },
+    {
+      "name": "post-opportunities-flow",
+      "type": "flow"
+    },
+    {
+      "name": "get-opportunity-by-id-flow",
+      "type": "flow"
+    },
+    {
+      "name": "put-opportunity-by-id-flow",
+      "type": "flow"
+    },
+    {
+      "name": "delete-opportunity-by-id-flow",
+      "type": "flow"
+    }
+  ],
+  "userPrompt": "",
+  "generatedAt": "2026-01-08T16:08:24.928Z",
+  "generatorVersion": "1.0.0",
+  "hasErrorHandlers": true,
+  "hasMUnitTests": true
+}

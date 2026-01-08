@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+        http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+  <sub-flow name="salesforce-readiness-check-subflow" doc:name="Salesforce Readiness Check" doc:id="95a0b61b-f4d1-4b3f-8d8d-52cb9d265110">
+    <try doc:name="Try" doc:id="77431ce5-a82b-4e3f-b6a1-59355cdde8d1">
+      <salesforce:query config-ref="Salesforce_Config" doc:name="Health Check Query" doc:id="c9b9287d-bfbe-42c0-8011-54e81e5d28dd">
+        <salesforce:salesforce-query><![CDATA[SELECT Id FROM Organization LIMIT 1]]></salesforce:salesforce-query>
+      </salesforce:query>
+      <error-handler>
+        <on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="c30e754f-15b2-446e-bf2b-2569da4dc6d3">
+          <logger level="INFO" doc:name="Logger" doc:id="bd91fd22-6efc-4462-8259-8ad808dcec61" message="Salesforce health check failed" />
+        </on-error-continue>
+      </error-handler>
+    </try>
+    <ee:transform doc:name="Readiness Response" doc:id="348d811c-59ca-4476-be40-9381f4e6a37c">
+      <ee:message>
+        <ee:set-payload>
+          %dw 2.0
+output application/json
+---
+{
+  servicename: "salesforce",
+  status: if(payload[0].Id == null) "down" else "up"
+}
+        </ee:set-payload>
+      </ee:message>
+    </ee:transform>
+  </sub-flow>
+
+</mule>
