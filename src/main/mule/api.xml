@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-    <apikit:config name="azure-project-v85-apikit-config" raml="api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" doc:name="APIKit Router Config" />
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+        http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+  <apikit:config name="azure-project-v85-apikit-config" raml="api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" doc:name="APIKit Router Config" />
 
   <flow name="azure-project-v85-api-main" doc:name="azure-project-v85 API Main" doc:id="11c57151-c2cc-5427-779b-9d17e77d567c">
     <http:listener path="/api/${api.majorVersion}/*" config-ref="HTTPS_Listener_config" doc:name="HTTP Listener" doc:id="5871cf65-66af-8155-0811-f5d3c8f92eae">
@@ -19,6 +28,7 @@
         </http:headers>
       </http:error-response>
     </http:listener>
+    <apikit:router config-ref="azure-project-v85-apikit-config" doc:name="APIKit Router" doc:id="322b3d9f-323f-13c9-da9f-ae5578ce070b" />
   </flow>
 
   <flow name="post:\leads:azure-project-v85-apikit-config" doc:name="post:\leads:azure-project-v85-apikit-config" doc:id="29f632ba-ac46-4ac2-d325-ac66386b03ae">
@@ -54,7 +64,7 @@
   </flow>
 
   <flow name="get:\readiness:azure-project-v85-apikit-config" doc:name="get:\readiness:azure-project-v85-apikit-config" doc:id="3ad14515-4a92-bc77-1f04-e38c3681ffa6">
-    <flow-ref doc:name="salesforce-readiness-check-subflow" doc:id="46480375-7d2b-95c9-1a2f-edb3fac4ab1f" name="salesforce-readiness-check-subflow" />
+    <flow-ref doc:name="salesforce-readiness-check-subflow" doc:id="46480375-7d2b-95c9-1a2f-edb3-f-edb3fac4ab1f" name="salesforce-readiness-check-subflow" />
   </flow>
 
 </mule>
