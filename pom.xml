@@ -5,21 +5,22 @@
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>com.mycompany</groupId>
-  <artifactId>azure-project-v85</artifactId>
+  <artifactId>azure-project-v73</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>mule-application</packaging>
   
-  <name>azure-project-v85</name>
+  <name>azure-project-v73</name>
   
-  <!-- ✅ FIX: Required encoding properties -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <app.runtime>4.9.0</app.runtime>
     <mule.maven.plugin.version>4.6.0</mule.maven.plugin.version>
+    <anypoint.environment>Sandbox</anypoint.environment>
+    <secure.key>dummy</secure.key>
+    <mule.env>dev</mule.env>
   </properties>
   
-  <!-- ✅ FIX: Correct build configuration -->
   <build>
     <plugins>
       <plugin>
@@ -31,6 +32,34 @@
           <classifier>mule-application</classifier>
         </configuration>
       </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.mule.tools.maven</groupId>
+        <artifactId>exchange-mule-maven-plugin</artifactId>
+        <version>0.1.4</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-exchange-pre-deploy</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <id>default-exchange-deploy</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   
@@ -41,6 +70,7 @@
       <version>1.11.3</version>
       <classifier>mule-plugin</classifier>
     </dependency>
+
     <dependency>
       <groupId>com.mulesoft.modules</groupId>
       <artifactId>mule-secure-configuration-property-module</artifactId>
@@ -59,34 +89,17 @@
       <version>10.22.5</version>
       <classifier>mule-plugin</classifier>
     </dependency>
-
-    <!-- MUnit Test Dependencies -->
-    <dependency>
-      <groupId>com.mulesoft.munit</groupId>
-      <artifactId>munit-runner</artifactId>
-      <version>2.3.5</version>
-      <classifier>mule-plugin</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.mulesoft.munit</groupId>
-      <artifactId>munit-tools</artifactId>
-      <version>2.3.5</version>
-      <classifier>mule-plugin</classifier>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
   
-  <!-- ✅ FIX: Repositories with proper <name> tags -->
   <repositories>
     <repository>
       <id>anypoint-exchange-v3</id>
-      <name>Anypoint Exchange</name>
+      <name>Anypoint Exchange V3</name>
       <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
     </repository>
     <repository>
       <id>mulesoft-releases</id>
-      <name>MuleSoft Releases</name>
+      <name>MuleSoft Releases Repository</name>
       <url>https://repository.mulesoft.org/releases/</url>
     </repository>
   </repositories>
@@ -94,8 +107,56 @@
   <pluginRepositories>
     <pluginRepository>
       <id>mulesoft-releases</id>
-      <name>MuleSoft Releases</name>
+      <name>MuleSoft Releases Repository</name>
       <url>https://repository.mulesoft.org/releases/</url>
     </pluginRepository>
   </pluginRepositories>
+  
+  <profiles>
+    <profile>
+      <id>cloudhub2</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.mule.tools.maven</groupId>
+            <artifactId>mule-maven-plugin</artifactId>
+            <version>${mule.maven.plugin.version}</version>
+            <extensions>true</extensions>
+            <executions>
+              <execution>
+                <id>cloudhub2-deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+                <configuration>
+                  <classifier>mule-application</classifier>
+                  <cloudHub2Deployment>
+                    <uri>https://anypoint.mulesoft.com</uri>
+                    <provider>MC</provider>
+                    <environment>Sandbox</environment>
+                    <target>Cloudhub-US-East-2</target>
+                    <muleVersion>${app.runtime}</muleVersion>
+                    <applicationName>azure-project-v73</applicationName>
+
+                    <connectedAppClientId>${anypointClientId}</connectedAppClientId>
+                    <connectedAppClientSecret>${anypointClientSecret}</connectedAppClientSecret>
+                    <connectedAppGrantType>client_credentials</connectedAppGrantType>
+
+                    <replicas>1</replicas>
+                    <vCores>0.1</vCores>
+
+                    <properties>
+                      <mule.env>${mule.env}</mule.env>
+                      <secure.key>${secure.key}</secure.key>
+                    </properties>
+                  </cloudHub2Deployment>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
